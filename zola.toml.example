@@ -67,14 +67,9 @@ not_found_recover_text = "« back to home »"
 date_format = "%b %-d, %Y"
 toc = true # show table-of-contents
 code_copy = true # show copy button in code block
-comment = false # enable comment
 math = false # enable formula rendering with KaTeX
 mermaid = false # enable chart rendering with Mermaid
 outdated_alert = false # show outdate alert after certain days
 outdated_alert_days = 120
 outdated_alert_text_before = "This article was last updated "
 outdated_alert_text_after = " days ago and may be out of date."
-
-reaction = false # Whether to enable anonymous emoji reactions (Note: You need to set up a working api endpoint to enable this feature)
-reaction_align = "right" # "left" | "center" | "right"
-reaction_endpoint = "https://example.com/api/reaction"

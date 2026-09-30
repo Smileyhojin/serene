@@ -7,19 +7,7 @@ function enableThemeToggle() {
     if (theme == "dark") document.body.classList.add('dark'); else document.body.classList.remove('dark');
     if (hlLink) hlLink.href = `/giallo-${theme}.css`;
     sessionStorage.setItem("theme", theme);
-    toggleGiscusTheme(theme);
   }
-  function toggleGiscusTheme(theme) {
-    const iframe = document.querySelector('iframe.giscus-frame');
-    if (iframe) iframe.contentWindow.postMessage({ giscus: { setConfig: { theme: `${location.origin}/giscus_${theme}.css` } } }, 'https://giscus.app');
-  }
-  function initGiscusTheme(evt) {
-    if (evt.origin !== 'https://giscus.app') return;
-    if (!(typeof evt.data === 'object' && evt.data.giscus)) return;
-    toggleGiscusTheme(sessionStorage.getItem("theme") || (preferDark.matches ? "dark" : "light"));
-    window.removeEventListener('message', initGiscusTheme);
-  }
-  window.addEventListener('message', initGiscusTheme);
   themeToggle.addEventListener('click', () => toggleTheme(sessionStorage.getItem("theme") == "dark" ? "light" : "dark"));
   preferDark.addEventListener("change", e => toggleTheme(e.matches ? "dark" : "light"));
   if (!sessionStorage.getItem("theme") && preferDark.matches) toggleTheme("dark");
@@ -187,62 +175,6 @@ function enableImgLightense() {
   window.addEventListener("load", () => Lightense(".prose img:not(.no-lightense)", { background: 'rgba(43, 43, 43, 0.19)' }));
 }
 
-function enableReaction() {
-  const container = document.querySelector('.reaction');
-  if (!container) return;
-  const endpoint = container.dataset.endpoint;
-  const slug = location.pathname.split('/').filter(Boolean).pop();
-  let state = { error: false, reaction: {} };
-  const render = () => {
-    const btns = Object.entries(state.reaction).map(([emoji, [count, reacted]])=> {
-      const span = document.createElement('span');
-      span.textContent = count;
-      const btn = document.createElement('button');
-      if (reacted) btn.classList.add('reacted');
-      btn.append(emoji, span);
-      btn.onclick = () => toggle(emoji);
-      return btn;
-    });
-    if (state.error) {
-      container.classList.add('error');
-    } else {
-      container.classList.remove('error');
-    }
-    container.replaceChildren(...btns);
-  };
-  const toggle = async (target) => {
-    const [count, reacted] = state.reaction[target];
-    state.reaction[target] = reacted ? [count - 1, false] : [count + 1, true];
-    render();
-    try {
-      const resp = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ slug, target, reacted: !reacted }),
-      });
-      if (resp.status === 200) {
-        error = false;
-      } else {
-        throw new Error();
-      }
-    } catch (err) {
-      state.error = true;
-      state.reaction[target] = [count, reacted];
-      render();
-    }
-  };
-  const init = async () => {
-    const resp = await fetch(`${endpoint}?slug=${slug}`);
-    if (resp.status === 200) {
-      state.reaction = await resp.json();
-      render();
-    }
-  };
-  init();
-}
-
 function enableBackLink() {
   const backLink = document.querySelector('#back-link');
   if (!backLink) return;
@@ -267,5 +199,4 @@ if (document.querySelector('.prose')) {
   addCopyBtns();
   addFootnoteBacklink();
   enableImgLightense();
-  enableReaction();
 }

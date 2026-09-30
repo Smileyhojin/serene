@@ -513,10 +513,6 @@ body.prose-page {
   article {
     padding: 0 15px;
   }
-
-  .giscus {
-    padding: 0 15px;
-  }
 }
 
 /* collections
@@ -1416,10 +1412,6 @@ body.post {
     background: #fff;
   }
 
-  .giscus {
-    padding: 0 15px;
-  }
-
   aside {
     order: 3;
     width: calc((100% - var(--main-max-width)) / 2);
@@ -1611,64 +1603,6 @@ body.not-found {
     }
   }
 }
-
-/* reaction
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-.reaction {
-  font-size: 0.8em;
-  padding: 15px 15px 30px;
-  min-height: 75px;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-
-  &.left {
-    justify-content: start;
-  }
-
-  &.right {
-    justify-content: end;
-  }
-
-  &.center {
-    justify-content: center;
-  }
-
-  &.error {
-    button {
-      color: var(--callout-caution-color) !important;
-    }
-  }
-
-  button {
-    line-height: 1;
-    padding: 0.5em;
-    color: var(--text-pale-color);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: none;
-    gap: 4px;
-    background: transparent;
-    user-select: none;
-    cursor: pointer;
-
-    span {
-      min-width: 16px;
-    }
-
-    &:hover {
-      color: var(--primary-color);
-    }
-
-    &.reacted {
-      color: var(--primary-color);
-    }
-  }
-}
-
 
 /* normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */

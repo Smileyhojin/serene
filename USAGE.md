@@ -65,7 +65,7 @@ back_to_top = true # show back-to-top button
 +++
 ```
 
-Display options like `toc` / `code_copy` / `comment` / `date_format` have site-wide defaults in `zola.toml`, you can override them here for this section (e.g. `toc = false`), see [Front Matter](#front-matter) for details.
+Display options like `toc` / `code_copy` / `date_format` have site-wide defaults in `zola.toml`, you can override them here for this section (e.g. `toc = false`), see [Front Matter](#front-matter) for details.
 
 Blog section is defined by `posts.html` and `post.html`. Serene also has a special template called `prose.html`, it applies the same styles of blog post page. You can use it as a section template for a custom section page, for example if you want a separate `about` page, you can add a `{ name = "about", path = "/about" }` to the `nav` and create a `myblog/content/about/_index.md`:
 
@@ -199,21 +199,19 @@ tags = ["one", "two", "three"]
 [extra]
 lang = "en"
 toc = true
-comment = false
 code_copy = true
 outdated_alert = true
 outdated_alert_days = 120
 math = false
 mermaid = false
 featured = false
-reaction = false
 og_image = "cover.png"
 +++
 
 new post about something...
 ```
 
-Display options follow a unified fallback chain: **post front-matter → the post's section `_index.md` → `[extra]` of `zola.toml`**, the closest one wins. This applies to `toc`, `code_copy`, `comment`, `math`, `mermaid`, `reaction`, `outdated_alert` and `outdated_alert_days` (`date_format` and `outdated_alert_text_before/after` follow a section → config chain). So you can set site-wide defaults in `zola.toml`, override them per section, and override again per post.
+Display options follow a unified fallback chain: **post front-matter → the post's section `_index.md` → `[extra]` of `zola.toml`**, the closest one wins. This applies to `toc`, `code_copy`, `math`, `mermaid`, `outdated_alert` and `outdated_alert_days` (`date_format` and `outdated_alert_text_before/after` follow a section → config chain). So you can set site-wide defaults in `zola.toml`, override them per section, and override again per post.
 
 If you set `categorized = true`, posts are grouped by category, and categories are sorted alphabetically by default, you can manually set the order by adding a prefix  `__[0-9]{2}__` in front of the category name, for example, `categories = ["__01__CatXXX"]`
 
@@ -239,65 +237,14 @@ Set `outdated_alert` and `outdated_alert_days` to enable the alert.
 
 Options `outdated_alert_text_before` and `outdated_alert_text_after` are the text content of the alert, they can be set in `[extra]` of `zola.toml`, or per section in its `_index.md`.
 
-## Comment
+## Removed integrations
 
-You can use [giscus](https://giscus.app) as the comment system.
-
-To enable it, you need to create `myblog/templates/_giscus_script.html` and put the script configured on the giscus website into it, then change the value of `data-theme` to `https://<your-domain-name>/giscus_light.css`, replace `<your-domain-name>` with you domain name, same as `base_url` in `zola.toml`, if you set `color_scheme` to `"dark"`, replace `giscus_light.css` with `giscus_dark.css`.
-
-Then set `comment = true` to enable comment.
-
-## Reaction
-
-This theme supports a feature called anonymous emoji reaction, visitors of you site can react to your post with emojis, without the need to log in or register.
-
-You need to setup a backend api endpoint to enable it. Your endpoint should handle both `GET` and `POST` request:
-
-- `GET`
-
-    Request query:
-
-     `slug`: the slug of the post
-
-    Response:
-
-    ```jsonc
-    {
-      "👍": [123, true], // emoji: [count, reacted]
-      "👀": [456, false]
-    }
-    ```
-
-- `POST`
-
-    Request body:
-
-    ```json
-    {
-      "slug": "post-slug",
-      "target": "👍",
-      "reacted": true
-    }
-    ```
-
-    Response:
-
-    ```json
-    {
-      "success": true
-    }
-    ```
-
-For convenience, you can use one template repo to setup your own endpoint:
-
--  [isunjn/reaction](https://github.com/isunjn/reaction): All you need is a [Cloudflare](https://cloudflare.com) account. The free tier is good enough for a low-traffic personal blog.
-
-- [mildronize/reaction](https://github.com/mildronize/reaction): Specific to [Azure](https://azure.microsoft.com/) platform.
-- [sorokya/reaction](https://github.com/sorokya/reaction): A self-contained one, you can run it with docker.
-
-After you setup your endpoint, set `reaction_endpoint = "<your-endpoint>"` and `reaction = true` to enable it.
-
-Giscus also support a reaction feature, but it requires visitors to log in to GitHub, you can disable it in giscus's settings.
+This personal fork no longer supports Giscus comments or anonymous emoji reactions.
+When migrating an existing site, remove `comment`, `reaction`, `reaction_align`, and
+`reaction_endpoint` from site configuration and front matter, and delete any
+`templates/_giscus_script.html` override and comment/reaction demo posts. Old settings
+are ignored; they no longer render a widget or trigger reaction API requests.
+The theme no longer generates `giscus_light.css` or `giscus_dark.css`.
 
 ## Codeblock
 
