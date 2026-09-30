@@ -1,11 +1,19 @@
 <style>
 
+  @font-face {
+    font-family: 'Noto Sans KR';
+    src: url('{{ get_url(path="fonts/noto-sans-kr/NotoSansKR-Variable.woff2") }}') format('woff2');
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+  }
+
   /* light mode colors */
   body {
     --primary-color: #5871a2;
     --primary-pale-color: #5871a233;
     --primary-decoration-color: #5871a210;
-    --bg-color: #ffffff;
+    --bg-color: #f7faff;
     --text-color: #2f3030;
     --text-pale-color: #767676;
     --text-decoration-color: #a9a9a9;
@@ -38,7 +46,7 @@
 
   /* typography */
   body {
-    --main-font: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --main-font: 'Noto Sans KR', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
     --code-font: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
     --homepage-max-width: 768px;
     --main-max-width: 768px;

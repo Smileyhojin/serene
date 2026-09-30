@@ -62,14 +62,9 @@ not_found_recover_text = "« back to home »"
 date_format = "%b %-d, %Y"
 toc = true
 code_copy = true
-comment = false
 math = false
 mermaid = false
 outdated_alert = false
 outdated_alert_days = 120
 outdated_alert_text_before = "This article was last updated "
 outdated_alert_text_after = " days ago and may be out of date."
-
-reaction = false
-reaction_align = "right"
-reaction_endpoint = "https://example.com/api/reaction"

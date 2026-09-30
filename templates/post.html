@@ -134,17 +134,6 @@
 
         {{ page.content | safe }}
       </article>
-
-      {% set show_reaction = page.extra.reaction if page.extra.reaction is defined else (section.extra.reaction if section.extra.reaction is defined else (config.extra.reaction if config.extra.reaction is defined else false)) %}
-      {% if show_reaction %}
-      <div class="reaction {{ config.extra.reaction_align }}" data-endpoint="{{ config.extra.reaction_endpoint }}"></div>
-      {% endif %}
-
-      {% set show_comment = page.extra.comment if page.extra.comment is defined else (section.extra.comment if section.extra.comment is defined else (config.extra.comment if config.extra.comment is defined else false)) %}
-      {% if show_comment %}
-      <div class="giscus"></div>
-      {% include "_giscus_script.html" %}
-      {% endif %}
     </div>
 
     {% include "_footer.html" %}
