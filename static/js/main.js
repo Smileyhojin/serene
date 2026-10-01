@@ -44,35 +44,6 @@ function enablePrerender() {
   });
 }
 
-function enableRssMask() {
-  const rssBtn = document.querySelector('#rss-btn');
-  const mask = document.querySelector('#rss-mask');
-  const copyBtn = document.querySelector('#rss-mask button');
-  if (!rssBtn || !mask) return;
-  rssBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    mask.showModal();
-  });
-  const close = (e) => {
-    if (e.target == mask) mask.close();
-  };
-  mask.addEventListener('click', close);
-  const copy = () => {
-    navigator.clipboard.writeText(copyBtn.dataset.link).then(() => {
-      copyBtn.innerHTML = copyBtn.dataset.checkIcon;
-      copyBtn.classList.add('copied');
-      copyBtn.removeEventListener('click', copy);
-      setTimeout(() => {
-        mask.close();
-        copyBtn.innerHTML = copyBtn.dataset.copyIcon;
-        copyBtn.classList.remove('copied');
-        copyBtn.addEventListener('click', copy);
-      }, 400);
-    });
-  }
-  copyBtn.addEventListener('click', copy);
-}
-
 function enableOutdateAlert() {
   const alert = document.querySelector('#outdate_alert');
   if (!alert) return;
@@ -268,7 +239,6 @@ function enableBackLink() {
 
 enableThemeToggle();
 enablePrerender();
-enableRssMask();
 enableBackLink();
 if (document.body.classList.contains('post')) {
   enableOutdateAlert();
@@ -281,4 +251,13 @@ if (document.querySelector('.prose')) {
   wrapTables();
   addFootnoteBacklink();
   enableImgLightense();
+}
+
+// A text/plain Blob preserves the author source without rendering HTML or Markdown.
+const markdownLink = document.querySelector('#markdown-btn');
+const markdownSource = document.querySelector('#markdown-source');
+if (markdownLink && markdownSource) {
+  markdownLink.href = URL.createObjectURL(new Blob([markdownSource.value], { type: 'text/plain;charset=utf-8' }));
+  markdownLink.hidden = false;
+  markdownSource.remove();
 }

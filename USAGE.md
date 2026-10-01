@@ -52,7 +52,7 @@ sort_by = "date"
 template = "posts.html"
 page_template = "post.html"
 insert_anchor_links = "right"
-generate_feeds = true
+generate_feeds = false
 
 [extra]
 lang = "en"
@@ -90,7 +90,7 @@ The default date format is "%b %-d, %Y", e.g. "Dec 13, 2025", check [this page](
 
 ### Multiple list sections
 
-You can have more than one blog-like list section, e.g. a `series` section alongside `posts`. Just create `myblog/content/series/_index.md` the same way as the blog section (with `template = "posts.html"` and `page_template = "post.html"`), and add it to `nav` in `zola.toml`. Each list section has its own options in `[extra]` (`date_format`, `toc`, `categorized`, etc.), and can have its own feed by setting `generate_feeds = true` in its `_index.md` (available at e.g. `/series/feed.xml`).
+You can have more than one blog-like list section, e.g. a `series` section alongside `posts`. Just create `myblog/content/series/_index.md` the same way as the blog section (with `template = "posts.html"` and `page_template = "post.html"`), and add it to `nav` in `zola.toml`. Each list section has its own options in `[extra]` (`date_format`, `toc`, `categorized`, etc.), and can have its own feed by setting `generate_feeds = true` in its `_index.md` (available at e.g. `/series/atom.xml`).
 
 The `blog_section_path` option in `zola.toml` points to your *main* blog section, it is used by the recent posts list of the home page and by the tags pages (tags are site-wide: posts from all list sections that share a tag will be listed together).
 
@@ -142,14 +142,11 @@ The default icons mostly came from [Remix Icon](https://remixicon.com/).
 
 The `color_scheme` option in `zola.toml` controls the light/dark mode behavior: `"auto"` (default) follows the visitor's system preference and shows a theme toggle button, while `"light"` / `"dark"` locks the site to a single mode and hides the button.
 
-## RSS
+## Feeds
 
-There are two ways to provide feeds:
-
-- **Per-section feeds** (recommended): set `generate_feeds = false` in `zola.toml`, and `generate_feeds = true` in the `_index.md` of your list sections. Each of these sections gets its own feed (e.g. `/posts/feed.xml`, `/series/feed.xml`), using the `title` and `description` of that section. The RSS button in the footer links to the feed of the section the current page belongs to.
-- **A single site-wide feed**: set `generate_feeds = true` in `zola.toml`, and `generate_feeds = false` in section `_index.md` files. The feed is located in the root directory (e.g. `/feed.xml`), contains posts from all sections, and uses the `title` and `description` of `zola.toml`. The RSS button in the footer links to it on all pages.
-
-`feed_filenames` can be set to `["feed.xml"]` (serene's own atom template), or `["atom.xml"]` / `["rss.xml"]` (zola's built-in templates), corresponding to different feed standards.
+The theme has no RSS button, feed dialog, or custom feed template. Feeds are
+disabled by default. Zola's native Atom/RSS output can still be enabled through
+`generate_feeds` if needed.
 
 ## Open Graph
 
@@ -507,8 +504,13 @@ italic). WOFF2 files and their OFL license are in `static/fonts/caskaydia-cove/`
 Characters absent from this font, including Korean, use the fallback font stack.
 
 
-## Table of contents
+## Reading
 
-On desktop, the table of contents stays fixed while scrolling. The current section
-uses the primary color and bold text. Long tables of contents scroll independently.
-The sidebar stays hidden on mobile.
+On desktop, the post table of contents stays at its initial viewport position.
+The current section uses the primary color and bold text.
+Long tables of contents scroll independently; the sidebar stays hidden on mobile.
+
+The footer's `.md` link opens the complete source file, including front matter and
+component calls, as plain text in a new tab. It requires JavaScript and uses a
+browser-local Blob URL, intended for copying rather than sharing as a permalink.
+Non-post pages have no RSS button.

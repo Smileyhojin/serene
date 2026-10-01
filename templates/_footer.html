@@ -1,11 +1,3 @@
-{% set show_rss = false %}
-{% if section is defined and section.generate_feeds %}
-  {% set rss_path = section.path ~ config.feed_filenames[0] %}
-  {% set show_rss = true %}
-{% elif config.generate_feeds %}
-  {% set rss_path = "/" ~ config.feed_filenames[0] %}
-  {% set show_rss = true %}
-{% endif %}
 <footer>
   <div class="left">
     <div class="copyright">
@@ -18,8 +10,8 @@
   </div>
 
   <div class="right">
-    {% if show_rss %}
-    <a id="rss-btn" href="{{ get_url(path=rss_path) }}">RSS</a>
+    {% if page is defined %}
+    <a id="markdown-btn" hidden target="_blank" rel="noopener" aria-label="Open Markdown source in a new tab">.md</a>
     {% endif %}
 
     {% if color_scheme == "auto" %}
@@ -33,16 +25,6 @@
   </div>
 </footer>
 
-{% if show_rss %}
-{% set link = get_url(path=rss_path) %}
-<dialog id="rss-mask">
-  <div>
-    <a href="{{ link }}">{{ link }}</a>
-    {% set copy_icon = load_data(path="icon/copy.svg") %}
-    {% set check_icon = load_data(path="icon/check.svg") %}
-    <button autofocus aria-label="copy" data-link="{{ link }}" data-copy-icon="{{ copy_icon }}" data-check-icon="{{ check_icon }}" >
-      {{ copy_icon | safe }}
-    </button>
-  </div>
-</dialog>
+{% if page is defined %}
+<textarea id="markdown-source" hidden>{{ load_data(path="content/" ~ page.relative_path, format="plain") }}</textarea>
 {% endif %}

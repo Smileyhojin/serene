@@ -1258,58 +1258,6 @@ header {
   }
 }
 
-/* rss mask
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-dialog#rss-mask {
-  margin: 0 auto;
-  padding: 0px;
-  border: none;
-  overflow: visible;
-  background: transparent;
-
-  &::backdrop {
-    background-color: initial;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-  }
-
-  div {
-    pointer-events: none;
-    height: 100vh;
-    height: 100dvh;
-    padding: 2em 0;
-    width: fit-content;
-    display: flex;
-    justify-content: center;
-    align-items: end;
-    flex-wrap: wrap;
-    gap: 1em;
-    font-size: 0.9em;
-  }
-
-  a {
-    pointer-events: auto;
-    border-bottom: 1.5px solid var(--primary-color);
-    color: var(--primary-color);
-    text-decoration: none;
-    line-height: 1.5;
-    line-break: anywhere;
-  }
-
-  button {
-    pointer-events: auto;
-    background: transparent;
-    border: none;
-    color: var(--text-pale-color);
-    padding: 0;
-    cursor: pointer;
-    &.copied, &:hover {
-      color: var(--primary-color);
-    }
-  }
-}
-
 /* footer
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
@@ -1349,7 +1297,7 @@ footer {
     gap: 4px;
     margin: 11px 0;
 
-    #rss-btn,
+    #markdown-btn,
     #theme-toggle {
       -webkit-tap-highlight-color: transparent;
       border: none;
@@ -1362,9 +1310,8 @@ footer {
       }
     }
 
-    #rss-btn {
-      padding: 4px 0;
-      font-size: 0.85em;
+    #markdown-btn {
+      padding: 4px;
       line-height: 18px;
     }
     #theme-toggle {
