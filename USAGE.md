@@ -225,6 +225,34 @@ Set `math = true` to enable formula rendering with KaTeX.
 
 Set `mermaid = true` to enable chart rendering with Mermaid.
 
+## ECharts plots
+
+Put a JavaScript file beside a post's `index.md`. Define an ECharts `option`
+object and add `export default option;` at the end of that file, then use:
+
+```jinja2
+{{ <echarts js_file="line.js" title="Monthly entries" height="400px" page /> }}
+```
+
+Pass `section` instead of `page` in a section's `_index.md`. A chart needs a
+colocated file; a standalone `post.md` must first become `post/index.md`.
+`width` defaults to `100%`, `height` to `400px`, and `gl` to `false`.
+Set `gl={true}` for 3D charts. Multiple instances may reuse the same file.
+
+Charts resize with their containers and redraw when the light/dark theme changes.
+ECharts is loaded once on chart pages; ECharts GL loads only for `gl={true}`.
+These pinned libraries are fetched from cdnjs. JavaScript and network access are
+required; 3D charts also need WebGL. Theme changes reset chart interactions.
+
+The JavaScript runs in the visitor's browser. It must be trusted author code,
+not user input. Export an option object, or export a function `(echarts) => option`
+when using helpers such as `echarts.graphic`. Bearplus definitions need only an
+`export default option;` line to work here.
+Keep a text summary or data table alongside plots for accessibility.
+
+Copy `examples/plots` or `examples/plots-3d` into `content/posts/` for working
+2D and 3D examples. Remove these example posts when finished experimenting.
+
 ## Featured Mark
 
 Set `featured = true` to display an asterisk(*) mark in front of the title.
@@ -249,6 +277,16 @@ The theme no longer generates `giscus_light.css` or `giscus_dark.css`.
 ## Codeblock
 
 Zola supports some [annotations for code blocks](https://www.getzola.org/documentation/content/syntax-highlighting/#annotations).
+
+Code blocks show language and optional `name=...` labels. `code_copy` controls
+the copy button through the existing post → section → site fallback. Copying
+preserves whitespace and excludes line numbers. Clipboard access requires
+HTTPS or localhost. Success changes the copy icon; failures display a manual-copy hint.
+
+Only code blocks use `--block-bg-color`; other content blocks have transparent
+backgrounds. Blocks have square corners. `--block-border-color` controls subtle
+separators. Line highlighting uses a subtle, darker background without an accent border.
+`--block-code-border-color` and `--detail-border-color` overrides still work.
 
 ## Callouts
 
@@ -456,3 +494,14 @@ You can watch (`watch > custom > releases > apply`) this project on github to be
 ```sh
 git submodule update --remote themes/serene
 ```
+
+### Default code palette and font
+
+Light and dark modes use One Light and One Dark colors, respectively.
+Set `light_theme = "one-light"` and `dark_theme = "one-dark-pro"` under
+`[markdown.highlighting]` in the site config; theme configuration is not inherited.
+Adjust `--code-highlight-bg-color` in `_custom_css.html` to change highlighted lines.
+
+Code uses self-hosted CaskaydiaCove Nerd Font Mono (regular, bold, italic, and bold
+italic). WOFF2 files and their OFL license are in `static/fonts/caskaydia-cove/`.
+Characters absent from this font, including Korean, use the fallback font stack.

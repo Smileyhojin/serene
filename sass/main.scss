@@ -131,8 +131,11 @@ a:focus-visible {
   }
 
   blockquote {
-    border-left: 1.5px var(--text-decoration-color) solid;
-    padding-left: 16px;
+    border: none;
+    border-left: 2px solid var(--block-border-color);
+    border-radius: var(--block-radius);
+    background: transparent;
+    padding: 0.75em 1em;
     margin: 1em 0;
     color: var(--text-pale-color);
 
@@ -272,15 +275,33 @@ a:focus-visible {
     border-spacing: 0;
     border-collapse: collapse;
     margin: 1.5em 0;
-    border: 1.5px solid var(--primary-color);
+    background: transparent;
+    border-radius: var(--block-radius);
+  }
+
+  .table-scroll {
+    overflow-x: auto;
+    margin: 1.5em 0;
+    border-radius: var(--block-radius);
+
+    table { margin: 0; }
+    &:focus-visible {
+      outline: 2px solid var(--primary-color);
+      outline-offset: 2px;
+    }
   }
 
   th,
   td {
     line-height: 2;
     text-align: center;
-    border: 1px solid var(--primary-color);
-    padding: 1px 10px;
+    border: none;
+    border-bottom: 1px solid var(--block-border-color);
+    padding: 6px 12px;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
   }
 
   :not(pre) > code {
@@ -296,15 +317,20 @@ a:focus-visible {
   pre {
     font-size: 0.85em;
     margin: 1.25em 0;
-    padding: 12px 48px 12px 16px;
+    padding: 12px 16px;
     line-height: 1.5;
-    border: 1.5px solid var(--primary-color);
-    border-color: var(--block-code-border-color);
+    border: 1px solid var(--block-code-border-color);
+    background: var(--block-bg-color);
     border-radius: var(--block-code-border-radius);
     overflow: auto;
 
     code {
       font-family: var(--code-font);
+    }
+
+    .z-l-hl,
+    .z-d-hl {
+      background-color: var(--code-highlight-bg-color);
     }
 
     .giallo-ln {
@@ -314,7 +340,7 @@ a:focus-visible {
 
     &.z-l-code,
     &.z-d-code {
-      background-color: var(--bg-color);
+      background-color: var(--block-bg-color);
     }
 
     &.mermaid {
@@ -329,50 +355,63 @@ a:focus-visible {
 
   .codeblock {
     margin: 1.5em 0;
-    position: relative;
-    overflow: auto;
+    min-width: 0;
+    border-radius: var(--block-code-border-radius);
+    background: var(--block-bg-color);
 
     pre {
       margin: 0;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
     }
-    code[data-name]::before {
-      content: attr(data-name);
-      display: block;
-      position: absolute;
-      left: 0px;
-      top: 0px;
-      padding: 12px 16px;
+
+    .code-header {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5em;
+      padding: 0.35em 0.75em;
+      border-bottom: 1px solid var(--block-border-color);
       color: var(--text-pale-color);
-      width: 100%;
-      border-bottom: 1px solid var(--primary-pale-color);
+      font-size: 0.8em;
     }
-    pre:has(code[data-name]) {
-      padding-top: calc(36px + 1em * var(--line-height));
+
+    .code-name {
+      margin-right: auto;
+      overflow-wrap: anywhere;
+      min-width: 0;
+    }
+
+    .code-language {
+      font-size: 0.9em;
+    }
+
+    .copy-status {
+      font-size: 0.9em;
+      overflow-wrap: anywhere;
     }
 
     .copy {
-      display: none;
-      z-index: 9;
-      position: absolute;
-      right: 0.6em;
-      top: 0.75em;
-      width: 24px;
-      height: 24px;
-      padding: 2px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      padding: 8px;
       cursor: pointer;
       background: transparent;
       border: none;
-      color: var(--text-pale-color);
+      border-radius: 0;
+      color: var(--text-color);
 
-      &.copied, &:hover {
-        display: block;
+      &:hover {
         color: var(--primary-color);
+        background: var(--primary-decoration-color);
       }
-    }
-
-    @media (hover: hover) {
-      &:hover .copy {
-        display: block;
+      &:focus-visible {
+        outline: 2px solid var(--primary-color);
+        outline-offset: 2px;
       }
     }
   }
@@ -418,15 +457,17 @@ a:focus-visible {
     border: none;
     position: relative;
     margin: 2em 0;
-    padding: 1.5em 0 0 1.25em;
+    padding: 1.5em;
+    border-radius: var(--block-radius);
+    background: transparent;
     color: var(--text-pale-color);
 
     .icon {
       color: var(--text-decoration-color);
       display: block !important;
       position: absolute;
-      left: 0;
-      top: 0;
+      left: 0.25em;
+      top: 0.25em;
     }
 
     .content > p:first-of-type {
@@ -448,11 +489,21 @@ a:focus-visible {
   }
 
   details {
-    border: 1.5px solid var(--detail-border-color);
+    border: 1px solid var(--detail-border-color);
+    background: transparent;
     border-radius: var(--detail-border-radius);
     margin: 1em 0;
     padding: 0.5em 1em;
     -webkit-tap-highlight-color: transparent;
+
+    summary {
+      cursor: pointer;
+      padding: 0.25em 0;
+      &:focus-visible {
+        outline: 2px solid var(--primary-color);
+        outline-offset: 3px;
+      }
+    }
 
     summary span {
       margin-left: 0.25em;
@@ -460,7 +511,22 @@ a:focus-visible {
   }
 
   .mermaid {
-    background: #fff;
+    background: transparent;
+  }
+
+  .echart {
+    max-width: 100%;
+    min-width: 0;
+    margin: 1.5em 0;
+    border-radius: var(--block-radius);
+    background: transparent;
+    overflow: hidden;
+
+    &[data-state="loading"], &[data-state="error"] {
+      display: grid;
+      place-items: center;
+      color: var(--text-pale-color);
+    }
   }
 
   .youtube {
@@ -1409,7 +1475,7 @@ body.post {
   }
 
   .mermaid {
-    background: #fff;
+    background: transparent;
   }
 
   aside {

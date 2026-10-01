@@ -70,3 +70,19 @@
 <iframe src="https://www.youtube.com/embed/{{ id }}{% if autoplay %}?autoplay=1&mute=1{% endif %}" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 </div>
 {%- endcomponent youtube %}
+
+
+{# Adapted from Bearplus's ECharts shortcode; see THIRD_PARTY.md. #}
+{% component echarts(js_file: string, title: string = "Interactive chart", width: string = "100%", height: string = "400px", gl: bool = false, page = {}, section = {}) -%}
+{%- if page?.colocated_path -%}
+{%- set chart_path = page.colocated_path ~ js_file -%}
+{%- elif section?.colocated_path -%}
+{%- set chart_path = section.colocated_path ~ js_file -%}
+{%- else -%}
+{{ throw(message="ECharts requires a colocated JavaScript file. Pass page or section to the component.") }}
+{%- endif -%}
+{%- set chart_source = load_data(path=chart_path, format="plain") -%}
+<div class="echart" role="figure" aria-label="{{ title }}" style="width: {{ width }}; height: {{ height }};" data-chart-src="{{ get_url(path=chart_path) }}" data-chart-gl="{{ gl }}" data-state="loading"><p class="chart-status" role="status">Loading chart…</p></div>
+<script type="module" src="{{ get_url(path="js/charts.js") }}"></script>
+<noscript><p>Enable JavaScript to view this chart.</p></noscript>
+{%- endcomponent echarts %}
