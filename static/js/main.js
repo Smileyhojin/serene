@@ -106,33 +106,71 @@ function enableTocTooltip() {
 
 function addCopyBtns() {
   const cfg = document.querySelector('#copy-cfg');
-  if (!cfg) return;
-  const copyIcon = cfg.dataset.copyIcon;
-  const checkIcon = cfg.dataset.checkIcon;
-  document.querySelectorAll('pre').forEach(block => {
-    if (block.classList.contains('mermaid')) return;
+  document.querySelectorAll('.prose pre').forEach(block => {
+    const code = block.querySelector('code');
+    if (!code || block.classList.contains('mermaid') || block.parentElement.classList.contains('codeblock')) return;
     const wrapper = document.createElement('div');
     wrapper.className = 'codeblock';
-    const btn = document.createElement('button');
-    btn.className = 'copy';
-    btn.ariaLabel = 'copy';
-    btn.innerHTML = copyIcon;
-    const copy = () => {
-      navigator.clipboard.writeText(block.textContent).then(() => {
-        btn.innerHTML = checkIcon;
-        btn.classList.add('copied');
-        btn.removeEventListener('click', copy);
-        setTimeout(() => {
-          btn.innerHTML = copyIcon;
-          btn.classList.remove('copied');
-          btn.addEventListener('click', copy);
-        }, 1500);
+    const header = document.createElement('div');
+    header.className = 'code-header';
+    const name = document.createElement('span');
+    name.className = 'code-name';
+    name.textContent = code.dataset.name || code.dataset.lang || 'text';
+    header.append(name);
+    if (code.dataset.name && code.dataset.lang) {
+      const lang = document.createElement('span');
+      lang.className = 'code-language';
+      lang.textContent = code.dataset.lang;
+      header.append(lang);
+    }
+    if (cfg) {
+      const status = document.createElement('span');
+      status.className = 'copy-status';
+      status.setAttribute('role', 'status');
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'copy';
+      btn.setAttribute('aria-label', 'Copy code');
+      btn.title = 'Copy code';
+      btn.innerHTML = cfg.dataset.copyIcon;
+      let timer;
+      btn.addEventListener('click', async () => {
+        clearTimeout(timer);
+        btn.innerHTML = cfg.dataset.copyIcon;
+        status.textContent = '';
+        const source = code.cloneNode(true);
+        source.querySelectorAll('.giallo-ln').forEach(number => number.remove());
+        btn.disabled = true;
+        try {
+          await navigator.clipboard.writeText(source.textContent);
+          btn.innerHTML = cfg.dataset.checkIcon;
+        } catch {
+          status.textContent = 'Copy failed. Select the code and copy manually.';
+        } finally {
+          btn.disabled = false;
+          timer = setTimeout(() => {
+            btn.innerHTML = cfg.dataset.copyIcon;
+            status.textContent = '';
+          }, 4000);
+        }
       });
-    };
-    btn.addEventListener('click', copy);
-    wrapper.appendChild(block.cloneNode(true));
-    wrapper.appendChild(btn);
-    block.replaceWith(wrapper);
+      header.append(status, btn);
+    }
+    block.before(wrapper);
+    wrapper.append(header, block);
+  });
+}
+
+function wrapTables() {
+  document.querySelectorAll('.prose table').forEach(table => {
+    if (table.parentElement.classList.contains('table-scroll')) return;
+    const wrapper = document.createElement('div');
+    wrapper.className = 'table-scroll';
+    wrapper.tabIndex = 0;
+    wrapper.setAttribute('role', 'region');
+    wrapper.setAttribute('aria-label', 'Scrollable table');
+    table.before(wrapper);
+    wrapper.append(table);
   });
 }
 
@@ -197,6 +235,7 @@ if (document.body.classList.contains('post')) {
 }
 if (document.querySelector('.prose')) {
   addCopyBtns();
+  wrapTables();
   addFootnoteBacklink();
   enableImgLightense();
 }
