@@ -505,3 +505,10 @@ Adjust `--code-highlight-bg-color` in `_custom_css.html` to change highlighted l
 Code uses self-hosted CaskaydiaCove Nerd Font Mono (regular, bold, italic, and bold
 italic). WOFF2 files and their OFL license are in `static/fonts/caskaydia-cove/`.
 Characters absent from this font, including Korean, use the fallback font stack.
+
+
+## Table of contents
+
+On desktop, the table of contents stays fixed while scrolling. The current section
+uses the primary color and bold text. Long tables of contents scroll independently.
+The sidebar stays hidden on mobile.

@@ -1405,12 +1405,6 @@ body.post {
     justify-content: space-between;
   }
 
-  #blank {
-    order: 1;
-    position: sticky;
-    width: calc((100% - var(--main-max-width)) / 2);
-  }
-
   main {
     order: 2;
     width: 100%;
@@ -1481,9 +1475,9 @@ body.post {
   aside {
     order: 3;
     width: calc((100% - var(--main-max-width)) / 2);
-    position: sticky;
-    margin-top: 13em;
-    top: 0;
+    position: fixed;
+    right: 0;
+    top: min(13em, 25vh);
     height: min-content;
     font-size: 0.9em;
 
@@ -1491,7 +1485,7 @@ body.post {
       padding: 10px 1em 10px 2em;
       min-width: 60%;
       overflow-y: auto;
-      max-height: calc(100vh - 6em);
+      max-height: calc(100dvh - min(13em, 25vh) - 5em);
 
       scrollbar-width: none;
       &::-webkit-scrollbar {
@@ -1528,6 +1522,11 @@ body.post {
       &.h3 {
         margin-left: 1.5em;
         border-left: 1px solid var(--text-decoration-color);
+      }
+
+      &[aria-current="location"] {
+        color: var(--primary-color);
+        font-weight: 700;
       }
 
       &:hover {
