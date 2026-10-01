@@ -72,6 +72,12 @@
         {% endfor %}
       </div>
       <div id="right">
+        {% if config.build_search_index %}
+        <button id="search-button" type="button" aria-label="Search" aria-haspopup="dialog" aria-controls="search-dialog" title="Search (Ctrl/⌘ K)">
+          {% set search_icon = load_data(path="icon/search.svg") %}
+          {{ search_icon | safe }}
+        </button>
+        {% endif %}
         {% for link in config.extra.links %}
         <a href="{{ link.url }}" aria-label="{{ link.name }}" target="_blank" rel='noreferrer noopener{% if link.rel_me%} me{% endif %}'>
           {% set icon_path = "icon/" ~ link.icon ~ ".svg" %}

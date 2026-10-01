@@ -44,35 +44,6 @@ function enablePrerender() {
   });
 }
 
-function enableRssMask() {
-  const rssBtn = document.querySelector('#rss-btn');
-  const mask = document.querySelector('#rss-mask');
-  const copyBtn = document.querySelector('#rss-mask button');
-  if (!rssBtn || !mask) return;
-  rssBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    mask.showModal();
-  });
-  const close = (e) => {
-    if (e.target == mask) mask.close();
-  };
-  mask.addEventListener('click', close);
-  const copy = () => {
-    navigator.clipboard.writeText(copyBtn.dataset.link).then(() => {
-      copyBtn.innerHTML = copyBtn.dataset.checkIcon;
-      copyBtn.classList.add('copied');
-      copyBtn.removeEventListener('click', copy);
-      setTimeout(() => {
-        mask.close();
-        copyBtn.innerHTML = copyBtn.dataset.copyIcon;
-        copyBtn.classList.remove('copied');
-        copyBtn.addEventListener('click', copy);
-      }, 400);
-    });
-  }
-  copyBtn.addEventListener('click', copy);
-}
-
 function enableOutdateAlert() {
   const alert = document.querySelector('#outdate_alert');
   if (!alert) return;
@@ -102,6 +73,48 @@ function enableTocTooltip() {
   };
   window.addEventListener('resize', toggleTooltip);
   toggleTooltip();
+}
+
+function enableActiveToc() {
+  const nav = document.querySelector('body.post aside nav');
+  if (!nav) return;
+  const entries = [...nav.querySelectorAll('a[href^="#"]')].map(link => {
+    let id;
+    try { id = decodeURIComponent(link.hash.slice(1)); } catch { id = link.hash.slice(1); }
+    return { link, heading: document.getElementById(id) };
+  }).filter(entry => entry.heading);
+  if (!entries.length) return;
+  let active;
+  let scheduled = false;
+  const update = () => {
+    scheduled = false;
+    let current = entries[0];
+    for (const entry of entries) {
+      if (entry.heading.getBoundingClientRect().top <= 80) current = entry;
+      else break;
+    }
+    if (window.scrollY > 0 && window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2) {
+      current = entries[entries.length - 1];
+    }
+    if (active === current) return;
+    active?.link.removeAttribute('aria-current');
+    current.link.setAttribute('aria-current', 'location');
+    active = current;
+    // Scroll only the TOC, never the article, when the active entry is clipped.
+    const item = current.link.getBoundingClientRect();
+    const bounds = nav.getBoundingClientRect();
+    if (item.top < bounds.top) nav.scrollTop -= bounds.top - item.top + 10;
+    else if (item.bottom > bounds.bottom) nav.scrollTop += item.bottom - bounds.bottom + 10;
+  };
+  const schedule = () => {
+    if (!scheduled) { scheduled = true; requestAnimationFrame(update); }
+  };
+  window.addEventListener('scroll', schedule, { passive: true });
+  window.addEventListener('resize', schedule);
+  window.addEventListener('hashchange', schedule);
+  window.addEventListener('load', schedule);
+  document.fonts.ready.then(schedule);
+  update();
 }
 
 function addCopyBtns() {
@@ -226,16 +239,25 @@ function enableBackLink() {
 
 enableThemeToggle();
 enablePrerender();
-enableRssMask();
 enableBackLink();
 if (document.body.classList.contains('post')) {
   enableOutdateAlert();
   addBackToTopBtn();
   enableTocTooltip();
+  enableActiveToc();
 }
 if (document.querySelector('.prose')) {
   addCopyBtns();
   wrapTables();
   addFootnoteBacklink();
   enableImgLightense();
+}
+
+// A text/plain Blob preserves the author source without rendering HTML or Markdown.
+const markdownLink = document.querySelector('#markdown-btn');
+const markdownSource = document.querySelector('#markdown-source');
+if (markdownLink && markdownSource) {
+  markdownLink.href = URL.createObjectURL(new Blob([markdownSource.value], { type: 'text/plain;charset=utf-8' }));
+  markdownLink.hidden = false;
+  markdownSource.remove();
 }

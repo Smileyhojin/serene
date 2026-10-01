@@ -32,6 +32,7 @@
   </script>
   {% endif %}
   {% block content %}{% endblock content %}
+  {% if config.build_search_index %}{% include "_search.html" %}{% endif %}
   {% block script %}{% endblock script %}
   <script src="{{ get_url(path='js/main.js') }}"></script>
 </body>

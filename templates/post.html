@@ -59,7 +59,6 @@
 
 {% block content %}
 <div id="wrapper">
-  <div id="blank"></div>
   <aside>
     {% set show_toc = page.extra.toc if page.extra.toc is defined else (section.extra.toc if section.extra.toc is defined else (config.extra.toc if config.extra.toc is defined else false)) %}
     {% if show_toc and page.toc %}
