@@ -504,7 +504,7 @@ italic). WOFF2 files and their OFL license are in `static/fonts/caskaydia-cove/`
 Characters absent from this font, including Korean, use the fallback font stack.
 
 
-## Reading
+## Reading and search
 
 On desktop, the post table of contents stays at its initial viewport position.
 The current section uses the primary color and bold text.
@@ -514,3 +514,27 @@ The footer's `.md` link opens the complete source file, including front matter a
 component calls, as plain text in a new tab. It requires JavaScript and uses a
 browser-local Blob URL, intended for copying rather than sharing as a permalink.
 Non-post pages have no RSS button.
+
+Enable the navigation search button in the site's `zola.toml`:
+
+```toml
+build_search_index = true
+
+[search]
+index_format = "fuse_json"
+include_title = true
+include_description = true
+include_content = true
+```
+
+The dialog searches only posts under `extra.blog_section_path`, including nested
+sections. Home, section indexes, and other pages are excluded. Result links use
+the current host, including local previews. It searches titles, descriptions, and
+complete bodies using case-insensitive
+substring matching, including Korean. All query terms must match; title matches
+rank first. Matching text in titles and excerpts has a pale blue highlight.
+The index loads on the first nonempty query and is reused on that page.
+Set `in_search_index = false` in page or section front matter to exclude content.
+Use Ctrl/⌘ K to toggle search, Escape to close, and arrow keys to navigate results.
+Search is available by keyboard on other pages too. This interaction is inspired
+by Apollo; the implementation does not depend on its Elasticlunr library.
